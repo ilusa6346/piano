@@ -2,14 +2,36 @@ import pygame
 from settings import BLACK, GREY, WHITE
 
 class Button:
-    def __init__(self, x, y, width, height, text, action=None):
-        self.rect = pygame.Rect(x, y, width, height)
+    def __init__(
+        self,
+        x, y, width, height,
+        text: str = "",
+        action=None,
+        img_idle=None,
+        img_hover=None,
+        center: bool = False
+    ):
         self.text = text
         self.action = action
-        self.color_idle = GREY
+        self.img_idle = img_idle
+        self.img_hover = img_hover
+        self.use_image = img_idle is not None
+
+        self.color_idle = (200, 200, 200)
         self.color_hover = (180, 180, 180)
-        self.color_border = BLACK
-        self.text_color = BLACK
+        self.color_border = (0, 0, 0)
+        self.text_color = (0, 0, 0)
+
+        if self.use_image and (width is None or height is None):
+            iw, ih = self.img_idle.get_size()
+            width = width or iw
+            height = height or ih
+
+        if center:
+            self.rect = pygame.Rect(0, 0, width, height)
+            self.rect.center = (x, y)
+        else:
+            self.rect = pygame.Rect(x, y, width, height)
 
     def draw(self, screen, font):
         mouse_pos = pygame.mouse.get_pos()
